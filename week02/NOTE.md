@@ -22,4 +22,4 @@ scrapy.selector.unifield.Selector对象：
 首先在middlewares文件中添加相应的class，添加完成后到setting.py中DOWNLOADER_MIDDLEWARES字段中按照格式添加`PROJECT_NAME.middlewares.CLASS_NAME`
 
 ### 遇到的问题
-pipeline写入mysql的时候提示Keyerror，不清楚是哪里有问题求指点。
+pipeline写入mysql的时候提示Keyerror，不清楚是哪里有问题求指点
