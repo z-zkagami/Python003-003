@@ -32,24 +32,22 @@ import pymysql
 class MaoyanmoviePipeline:
     def conn_db(self, spider):
         self.conn = pymysql.connect(host = 'localhost', 
-                                    user = 'test', 
-                                    db = 'test', 
+                                    user = 'root', 
+                                    db = 'test_db', 
                                     charset = 'utf8-mb4', 
-                                    password = '000000')
+                                    password = '00000000')
         self.cursor = self.conn.cursor()
 
     def process_item(self, item, spider):
         movie_name = item['movie_name']
         catagories = item['catagories']
-        release_data = item['release_data']
-        value = (movie_name, catagories, release_data)
-        self.values.append(value)
-        sql = "INSERT INTO `test`(`movie_name`, `catagories`, `release_data`) VALUES(%s, %s, %s)"
+        release_date = item['release_data']
+        sql = "CREATE TABLE IF NOT EXIST {} (`name`, `catagory`, `release`) VALUES({}, {}, {});".format('test_db', movie_name, catagories, release_date)
         try:
-            self.cursor.execute(sql, (movie_name, catagories, release_data))
+            self.cursor.execute(sql)
             self.conn.commit()
         except Exception as e:
-            self.rollback()
+            self.conn.rollback()
             print(e)
 
         return item

@@ -71,7 +71,7 @@ class RandomUserAgentMiddleware(object):
         return cls(crawler)
 
     def process_request(self, request, spider):
-        request.headers.default("User-Agent", self.ua.random)
+        request.headers.setdefault("User-Agent", self.ua.random)
 
 
 class RandomHttpProxyMiddleware(HttpProxyMiddleware):
@@ -81,14 +81,15 @@ class RandomHttpProxyMiddleware(HttpProxyMiddleware):
         for proxy in proxy_list:
             parse = urlparse(proxy)
             self.proxies[parse.scheme].append(proxy)
+        print(self.proxies)
 
     @classmethod
     def from_crawler(cls, crawler):
-        if not crawler.setting.get('HTTP_PROXY_LIST'):
+        if not crawler.settings.get('HTTP_PROXY_LIST'):
             raise NotConfigured
 
-        http_proxt_list = crawler.setting.get('HTTP_PROXY_LIST')
-        auth_encoding = crawler.setting.get('HTTPPROXY_AUTH_ENCODING', 'utf-8')
+        http_proxy_list = crawler.settings.get('HTTP_PROXY_LIST')
+        auth_encoding = crawler.settings.get('HTTPPROXY_AUTH_ENCODING', 'utf-8')
 
         return cls(auth_encoding, http_proxy_list)
 
