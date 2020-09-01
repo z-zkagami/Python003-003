@@ -30,29 +30,44 @@ import pymysql
 #         self.file.close()
 
 class MaoyanmoviePipeline:
-    def conn_db(self, spider):
-        self.conn = pymysql.connect(host = 'localhost', 
-                                    user = 'root', 
-                                    db = 'test_db', 
-                                    charset = 'utf8-mb4', 
-                                    password = '00000000')
-        self.cursor = self.conn.cursor()
+    def open_spider(self, spider):
+        db = spider.settings.get('MYSQL_DB_NAME', 'test_db')
+        host = spider.settings.get('MYSQL_HOST', 'localhost')
+        port = spider.settings.get('MYSQL_PORT', 3306)
+        user = spider.settings.get('MYSQL_USER', 'root')
+        passwd = spider.settings.get('MYSQL_PASSWD', 'a1s2#f4g5')
+
+        self.db_conn = pymysql.connect(host=host, port=port, db=db, user=user, passwd=passwd, charset='utf8')
+        self.db_cur = self.db_conn.cursor()
+
+    def close_spider(self, spider):
+        self.db_conn.commit()
+        self.db_conn.close()
 
     def process_item(self, item, spider):
-        movie_name = item['movie_name']
-        catagories = item['catagories']
-        release_date = item['release_data']
-        sql = "CREATE TABLE IF NOT EXIST {} (`name`, `catagory`, `release`) VALUES({}, {}, {});".format('test_db', movie_name, catagories, release_date)
-        try:
-            self.cursor.execute(sql)
-            self.conn.commit()
-        except Exception as e:
-            self.conn.rollback()
-            print(e)
-
+        self.insert_db(item)
         return item
 
-    def close_db(self, spider):
-        self.conn.close()
+    def insert_db(self, item):
+        values = (
+            item['movie_name'], 
+            item['catagories'], 
+            item['release_date'],
+        )
 
-            
+        sql_1 = """
+                    drop table if exists `movies`;
+                    create table if not exists `movies` (
+                        `name` varchar(50) not null, 
+                        `catagory` varchar(100) not null, 
+                        `release` date) 
+                        default charset=utf8;
+                """
+        self.db_cur.execute(sql_1)
+        
+        sql_2 = """
+                    INSERT INTO `movies`(`name`, `catagory`, `release`) 
+                    VALUES (%s, %s, %s)
+                """
+
+        self.db_cur.execute(sql_2, values)

@@ -23,3 +23,5 @@ scrapy.selector.unifield.Selector对象：
 
 ### 遇到的问题
 pipeline写入mysql的时候提示Keyerror，不清楚是哪里有问题求指点
+
+20200901更新：根据老师的提示，已完成mysql pipelines的修改，重构了MaoyanmoviePipeline，重写了sql语句，把mysql配置写入了settings.py

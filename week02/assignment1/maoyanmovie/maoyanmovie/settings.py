@@ -76,6 +76,13 @@ HTTP_PROXY_LIST = [
 #    'scrapy.extensions.telnet.TelnetConsole': None,
 #}
 
+# MYSQL_CONFIGURATION
+MYSQL_DB_NAME = 'test_db'
+MYSQL_HOST = 'localhost'
+MYSQL_PORT = 3306
+MYSQL_USER = 'root'
+MYSQL_PASSWD = '00000000'
+
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
