@@ -35,7 +35,7 @@ class MaoyanmoviePipeline:
         host = spider.settings.get('MYSQL_HOST', 'localhost')
         port = spider.settings.get('MYSQL_PORT', 3306)
         user = spider.settings.get('MYSQL_USER', 'root')
-        passwd = spider.settings.get('MYSQL_PASSWD', 'a1s2#f4g5')
+        passwd = spider.settings.get('MYSQL_PASSWD', '00000000')
 
         self.db_conn = pymysql.connect(host=host, port=port, db=db, user=user, passwd=passwd, charset='utf8')
         self.db_cur = self.db_conn.cursor()
@@ -64,7 +64,7 @@ class MaoyanmoviePipeline:
                         default charset=utf8;
                 """
         self.db_cur.execute(sql_1)
-        
+
         sql_2 = """
                     INSERT INTO `movies`(`name`, `catagory`, `release`) 
                     VALUES (%s, %s, %s)
